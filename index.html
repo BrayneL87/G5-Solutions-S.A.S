@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventario Escolar</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+    text-align: center;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    margin-top: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+
+input, select, button {
+    padding: 8px;
+    margin: 5px;
+}
+
+button {
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+th {
+    background: #007bff;
+    color: white;
+}
+.roles {
+    text-align: left;
+    margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Inventario de Artículos Escolares</h2>
+
+    <!-- Registro de Usuario -->
+    <h3>Inicio de Sesión</h3>
+    <input type="text" id="nombreUsuario" placeholder="Nombre">
+    <select id="rol">
+        <option value="admin">Administrador</option>
+        <option value="usuario">Usuario</option>
+    </select>
+    <button onclick="login()">Ingresar</button>
+
+    <h4 id="sesionActiva"></h4>
+
+    <hr>
+
+    <!-- Formulario Inventario -->
+    <h3>Registrar Producto</h3>
+    <input type="text" id="producto" placeholder="Nombre del producto">
+    <input type="number" id="cantidad" placeholder="Cantidad">
+    <button onclick="agregarProducto()">Agregar</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody id="tablaInventario"></tbody>
+    </table>
+
+    <!-- Roles del Proyecto -->
+    <div class="roles">
+        <h3>Roles del Proyecto</h3>
+        <p><b>Líder:</b> Organiza tareas y coordina el desarrollo del inventario.</p>
+        <p><b>Analista:</b> Interpreta el requisito: solo el administrador puede modificar inventario.</p>
+        <p><b>Tester:</b> Redacta casos de prueba (registro válido, campos vacíos, permisos).</p>
+        <p><b>Seguridad:</b> Propone casos negativos (usuario intentando eliminar o registrar).</p>
+        <p><b>Soporte:</b> Valida que el sistema sea claro y fácil de usar.</p>
+    </div>
+
+</div>
+
+<script>
+let usuarioActual = "";
+let rolActual = "";
+let inventario = [];
+
+function login() {
+    usuarioActual = document.getElementById("nombreUsuario").value;
+    rolActual = document.getElementById("rol").value;
+
+    if (usuarioActual === "") {
+        alert("Ingrese un nombre de usuario");
+        return;
+    }
+
+    document.getElementById("sesionActiva").innerText =
+        "Sesión activa: " + usuarioActual + " (" + rolActual + ")";
+}
+
+function agregarProducto() {
+    if (rolActual !== "admin") {
+        alert("ERROR: Solo el administrador puede registrar productos");
+        return;
+    }
+
+    let nombre = document.getElementById("producto").value;
+    let cantidad = document.getElementById("cantidad").value;
+
+    if (nombre === "" || cantidad === "") {
+        alert("Todos los campos son obligatorios");
+        return;
+    }
+
+    inventario.push({nombre, cantidad});
+    mostrarInventario();
+    alert("Producto registrado correctamente");
+
+    document.getElementById("producto").value = "";
+    document.getElementById("cantidad").value = "";
+}
+
+function eliminarProducto(index) {
+    if (rolActual !== "admin") {
+        alert("ERROR: Solo el administrador puede eliminar productos");
+        return;
+    }
+
+    inventario.splice(index, 1);
+    mostrarInventario();
+    alert("Producto eliminado correctamente");
+}
+
+function mostrarInventario() {
+    let tabla = document.getElementById("tablaInventario");
+    tabla.innerHTML = "";
+
+    inventario.forEach((item, index) => {
+        tabla.innerHTML += `
+            <tr>
+                <td>${item.nombre}</td>
+                <td>${item.cantidad}</td>
+                <td><button onclick="eliminarProducto(${index})">Eliminar</button></td>
+            </tr>
+        `;
+    });
+}
+</script>
+
+</body>
+</html>
