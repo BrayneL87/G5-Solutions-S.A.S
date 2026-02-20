@@ -1,5 +1,9 @@
 # G5-Solutions-S.A.S
 
+## 🖼️ Vista previa
+
+![Vista previa](./img/G5.png)
+
 # Sistema de Inventarios - G5 Solutions S.A.S
 
 ## 📌 Descripción del Proyecto
@@ -71,4 +75,5 @@ flowchart TD
 
 👥 Autores
 Proyecto desarrollado por Braynel en el marco de Plataformas Tecnologicas.
+
 
